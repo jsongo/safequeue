@@ -87,6 +87,36 @@ func (st *FIFO) Dequeue() (interface{}, error) {
 	return elementToReturn, nil
 }
 
+// DequeueN dequeues several element. Returns error if queue is locked or empty.
+func (st *FIFO) DequeueN(count int) ([]interface{}, error) {
+	if st.isLocked {
+		return nil, NewQueueError(QueueErrorCodeLockedQueue, "The queue is locked")
+	}
+
+	st.rwmutex.Lock()
+	defer st.rwmutex.Unlock()
+
+	size := len(st.slice)
+	if size == 0 {
+		return nil, NewQueueError(QueueErrorCodeEmptyQueue, "empty queue")
+	}
+
+	var isSliceEmptied bool
+	if size <= count { // not enough elements
+		count = size
+		isSliceEmptied = true
+	}
+	elementsToReturn := st.slice[:count]
+	st.slice = st.slice[count:]
+
+	// If the slice is empty, then create a new one so that the older can be gc-collected.
+	if isSliceEmptied {
+		st.slice = make([]interface{}, 0)
+	}
+
+	return elementsToReturn, nil
+}
+
 // DequeueOrWaitForNextElement dequeues an element (if exist) or waits until the next element gets enqueued and returns it.
 // Multiple calls to DequeueOrWaitForNextElement() would enqueue multiple "listeners" for future enqueued elements.
 func (st *FIFO) DequeueOrWaitForNextElement() (interface{}, error) {
