@@ -1,4 +1,4 @@
-package goconcurrentqueue
+package safequeue
 
 import (
 	"testing"

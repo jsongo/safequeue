@@ -1,4 +1,4 @@
-package goconcurrentqueue
+package safequeue
 
 // Queue interface with basic && common queue functions
 type Queue interface {

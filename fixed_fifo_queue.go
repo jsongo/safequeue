@@ -1,4 +1,4 @@
-package goconcurrentqueue
+package safequeue
 
 // Fixed capacity FIFO (First In First Out) concurrent queue
 type FixedFIFO struct {

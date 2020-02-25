@@ -1,4 +1,4 @@
-package goconcurrentqueue
+package safequeue
 
 const (
 	QueueErrorCodeEmptyQueue            = "empty-queue"

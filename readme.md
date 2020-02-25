@@ -1,7 +1,7 @@
-[![godoc reference](https://img.shields.io/badge/godoc-reference-blue.svg)](https://godoc.org/github.com/enriquebris/goconcurrentqueue) ![version](https://img.shields.io/badge/version-v0.5.1-yellowgreen.svg?style=flat "goconcurrentqueue v0.5.1")  [![Go Report Card](https://goreportcard.com/badge/github.com/enriquebris/goconcurrentqueue)](https://goreportcard.com/report/github.com/enriquebris/goconcurrentqueue)  [![Build Status](https://api.travis-ci.org/enriquebris/goconcurrentqueue.svg?branch=master)](https://travis-ci.org/enriquebris/goconcurrentqueue) [![codecov](https://codecov.io/gh/enriquebris/goconcurrentqueue/branch/master/graph/badge.svg)](https://codecov.io/gh/enriquebris/goconcurrentqueue)
+[![godoc reference](https://img.shields.io/badge/godoc-reference-blue.svg)](https://godoc.org/github.com/jsongo/safequeue) ![version](https://img.shields.io/badge/version-v0.5.1-yellowgreen.svg?style=flat "safequeue v0.5.1")  [![Go Report Card](https://goreportcard.com/badge/github.com/jsongo/safequeue)](https://goreportcard.com/report/github.com/jsongo/safequeue)  [![Build Status](https://api.travis-ci.org/jsongo/safequeue.svg?branch=master)](https://travis-ci.org/jsongo/safequeue) [![codecov](https://codecov.io/gh/jsongo/safequeue/branch/master/graph/badge.svg)](https://codecov.io/gh/jsongo/safequeue)
 
-# goconcurrentqueue - Concurrent safe queues
-The package goconcurrentqueue offers a public interface Queue with methods for a [queue](https://en.wikipedia.org/wiki/Queue_(abstract_data_type)).
+# safequeue - Concurrent safe queues
+The package safequeue offers a public interface Queue with methods for a [queue](https://en.wikipedia.org/wiki/Queue_(abstract_data_type)).
 It comes with multiple Queue's concurrent-safe implementations, meaning they could be used concurrently by multiple goroutines without adding race conditions.
 
 ## Topics
@@ -18,7 +18,7 @@ It comes with multiple Queue's concurrent-safe implementations, meaning they cou
 
 Execute
 ```bash
-go get github.com/enriquebris/goconcurrentqueue
+go get github.com/jsongo/safequeue
 ```
 
 This package is compatible with the following golang versions:
@@ -30,7 +30,7 @@ This package is compatible with the following golang versions:
  - 1.12.x
 
 ## Documentation
-Visit [goconcurrentqueue at godoc.org](https://godoc.org/github.com/enriquebris/goconcurrentqueue)
+Visit [safequeue at godoc.org](https://godoc.org/github.com/jsongo/safequeue)
 
 ## Queues
 
@@ -46,8 +46,8 @@ Visit [goconcurrentqueue at godoc.org](https://godoc.org/github.com/enriquebris/
 #### pros
  - It is possible to enqueue as many items as needed.
  - Extra methods to get and remove enqueued items:
-     - [Get](https://godoc.org/github.com/enriquebris/goconcurrentqueue#FIFO.Get): returns an element's value and keeps the element at the queue
-     - [Remove](https://godoc.org/github.com/enriquebris/goconcurrentqueue#FIFO.Get): removes an element (using a given position) from the queue
+     - [Get](https://godoc.org/github.com/jsongo/safequeue#FIFO.Get): returns an element's value and keeps the element at the queue
+     - [Remove](https://godoc.org/github.com/jsongo/safequeue#FIFO.Get): removes an element (using a given position) from the queue
 
 #### cons
  - It is slightly slower than FixedFIFO.
@@ -85,7 +85,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/enriquebris/goconcurrentqueue"
+	"github.com/jsongo/safequeue"
 )
 
 type AnyStruct struct {
@@ -94,7 +94,7 @@ type AnyStruct struct {
 }
 
 func main() {
-	queue := goconcurrentqueue.NewFIFO()
+	queue := safequeue.NewFIFO()
 
 	queue.Enqueue("any string value")
 	queue.Enqueue(5)
@@ -128,12 +128,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/enriquebris/goconcurrentqueue"
+	"github.com/jsongo/safequeue"
 )
 
 func main() {
 	var (
-		fifo = goconcurrentqueue.NewFIFO()
+		fifo = safequeue.NewFIFO()
 		done = make(chan struct{})
 	)
 
@@ -168,20 +168,20 @@ package main
 import (
 	"fmt"
 
-	"github.com/enriquebris/goconcurrentqueue"
+	"github.com/jsongo/safequeue"
 )
 
 func main() {
 	var (
-		queue          goconcurrentqueue.Queue
+		queue          safequeue.Queue
 		dummyCondition = true
 	)
 
 	// decides which Queue's implementation is the best option for this scenario
 	if dummyCondition {
-		queue = goconcurrentqueue.NewFIFO()
+		queue = safequeue.NewFIFO()
 	} else {
-		queue = goconcurrentqueue.NewFixedFIFO(10)
+		queue = safequeue.NewFixedFIFO(10)
 	}
 
 	fmt.Printf("queue's length: %v\n", queue.GetLen())
@@ -189,8 +189,8 @@ func main() {
 	fmt.Printf("queue's length: %v\n", queue.GetLen())
 }
 
-// workWithQueue uses a goconcurrentqueue.Queue to perform the work
-func workWithQueue(queue goconcurrentqueue.Queue) error {
+// workWithQueue uses a safequeue.Queue to perform the work
+func workWithQueue(queue safequeue.Queue) error {
 	// do some work
 
 	// enqueue an item
